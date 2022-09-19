@@ -1,0 +1,8 @@
+FROM ubuntu:22.04
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y python3-pip wget
+RUN pip install ctranslate2 OpenNMT-py sentencepiece
+RUN wget https://s3.amazonaws.com/opennmt-models/transformer-ende-wmt-pyOnmt.tar.gz
+RUN tar xf transformer-ende-wmt-pyOnmt.tar.gz
+RUN ct2-opennmt-py-converter --model_path averaged-10-epoch.pt --output_dir ende_ctranslate2
+COPY example.py /app/example.py
+ENTRYPOINT [ "python3", "/app/example.py" ]
